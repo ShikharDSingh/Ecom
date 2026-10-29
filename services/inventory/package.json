@@ -9,5 +9,11 @@
     "lint": "echo 'No lint config yet'",
     "dev": "node --watch dist/index.js",
     "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0"
   }
 }

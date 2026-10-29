@@ -10,11 +10,10 @@ export function createLogger({ service, level = process.env.LOG_LEVEL ?? 'info' 
     name: service,
     level,
     timestamp: pino.stdTimeFunctions.isoTime,
-    base: undefined,
     formatters: {
       level: (label) => ({ level: label }),
     },
-  });
+  } satisfies pino.LoggerOptions);
 }
 
 export function withCorrelationId(logger: pino.Logger, correlationId?: string) {

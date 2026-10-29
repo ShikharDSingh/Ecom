@@ -11,8 +11,6 @@ export function initializeTelemetry(serviceName: string, version = '0.1.0') {
   const sdk = new NodeSDK({
     serviceName,
     instrumentations: [getNodeAutoInstrumentations()],
-    resourceDetectors: [],
-    resource: undefined,
   });
 
   sdk.start();

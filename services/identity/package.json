@@ -9,5 +9,15 @@
     "lint": "echo 'No lint config yet'",
     "dev": "node --watch dist/index.js",
     "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.1",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.5"
   }
 }
