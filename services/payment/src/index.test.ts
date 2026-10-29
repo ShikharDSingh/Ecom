@@ -5,7 +5,7 @@ import { PaymentService } from './index';
 describe('PaymentService', () => {
   it('keeps payment operations idempotent across duplicate requests', async () => {
     const gateway = {
-      invoke: async () => 'succeeded',
+      invoke: async (): Promise<'succeeded'> => 'succeeded',
     };
     const service = new PaymentService(gateway, () => '2026-01-01T00:00:00.000Z');
 
@@ -20,7 +20,7 @@ describe('PaymentService', () => {
 
   it('records timeout and unknown outcomes without treating them as confirmed failures', async () => {
     const gateway = {
-      invoke: async () => 'timeout',
+      invoke: async (): Promise<'timeout'> => 'timeout',
     };
     const service = new PaymentService(gateway, () => '2026-01-02T00:00:00.000Z');
 
@@ -35,7 +35,7 @@ describe('PaymentService', () => {
 
   it('supports compensation and refund flows after a successful payment', async () => {
     const gateway = {
-      invoke: async () => 'succeeded',
+      invoke: async (): Promise<'succeeded'> => 'succeeded',
     };
     const service = new PaymentService(gateway, () => '2026-01-03T00:00:00.000Z');
 

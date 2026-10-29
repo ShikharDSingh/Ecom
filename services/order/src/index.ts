@@ -178,7 +178,7 @@ export class OrderSagaService {
       order.status = 'payment_confirmed';
       order.saga.phase = 'PAYMENT_PENDING';
       order.saga.substate = 'PAYMENT_CONFIRMED';
-      order.saga.lastError = undefined;
+      delete order.saga.lastError;
       order.saga.updatedAt = this.now();
       order.updatedAt = order.saga.updatedAt;
       this.emitOutbox(orderId, 'payment.succeeded', {
@@ -227,7 +227,7 @@ export class OrderSagaService {
     order.saga.phase = 'CONFIRMED';
     order.saga.substate = 'COMPLETED';
     order.saga.compensationRequired = false;
-    order.saga.lastError = undefined;
+    delete order.saga.lastError;
     order.saga.updatedAt = this.now();
     order.updatedAt = order.saga.updatedAt;
 
@@ -318,7 +318,7 @@ export class OrderSagaService {
       order.saga.phase = 'CANCELLED';
       order.saga.substate = 'COMPENSATED';
       order.saga.compensationRequired = false;
-      order.saga.lastError = undefined;
+      delete order.saga.lastError;
       order.saga.updatedAt = this.now();
       order.updatedAt = order.saga.updatedAt;
       this.emitOutbox(orderId, 'order.cancelled', {

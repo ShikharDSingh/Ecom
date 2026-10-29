@@ -8,6 +8,12 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "echo 'No lint config yet'",
     "dev": "node --watch dist/index.js",
-    "test": "echo 'No tests yet'"
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0"
   }
 }
