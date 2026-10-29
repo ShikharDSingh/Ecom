@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: stockflow-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-stockflow}
+      POSTGRES_USER: ${POSTGRES_USER:-stockflow_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stockflow_admin}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deploy/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-stockflow_admin} -d ${POSTGRES_DB:-stockflow}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - stockflow
+
+  redis:
+    image: redis:7-alpine
+    container_name: stockflow-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    networks:
+      - stockflow
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: stockflow-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - stockflow
+
+  minio:
+    image: minio/minio:RELEASE.2025-01-18T00-31-37Z
+    container_name: stockflow-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-stockflow}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-stockflow123}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - stockflow
+
+networks:
+  stockflow:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  minio_data:

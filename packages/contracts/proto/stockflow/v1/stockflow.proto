@@ -1,0 +1,154 @@
+syntax = "proto3";
+
+package stockflow.v1;
+
+message Empty {}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string role = 3;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string password = 2;
+  string role = 3;
+}
+
+message Product {
+  string id = 1;
+  string sku = 2;
+  string name = 3;
+  int64 unit_price_cents = 4;
+  string status = 5;
+}
+
+message CatalogQueryRequest {
+  repeated string skus = 1;
+}
+
+message InventoryItem {
+  string sku = 1;
+  int64 available_quantity = 2;
+  int64 reserved_quantity = 3;
+}
+
+message ReserveInventoryRequest {
+  string order_id = 1;
+  string sku = 2;
+  int64 quantity = 3;
+}
+
+message ReserveInventoryResponse {
+  bool reserved = 1;
+  string reservation_id = 2;
+  string reason = 3;
+}
+
+message OrderItem {
+  string sku = 1;
+  int64 quantity = 2;
+  int64 unit_price_cents = 3;
+}
+
+message CreateOrderRequest {
+  string user_id = 1;
+  repeated OrderItem items = 2;
+}
+
+message Order {
+  string id = 1;
+  string user_id = 2;
+  string status = 3;
+  int64 total_cents = 4;
+  repeated OrderItem items = 5;
+}
+
+message PaymentAuthorizationRequest {
+  string order_id = 1;
+  int64 amount_cents = 2;
+  string currency = 3;
+}
+
+message PaymentAuthorizationResponse {
+  bool approved = 1;
+  string payment_id = 2;
+  string provider_reference = 3;
+}
+
+message NotificationRequest {
+  string channel = 1;
+  string recipient = 2;
+  string template = 3;
+  map<string, string> metadata = 4;
+}
+
+message NotificationResponse {
+  bool accepted = 1;
+  string message_id = 2;
+}
+
+message AuditEvent {
+  string id = 1;
+  string actor_id = 2;
+  string entity_type = 3;
+  string entity_id = 4;
+  string action = 5;
+  string metadata_json = 6;
+}
+
+service IdentityService {
+  rpc CreateUser(CreateUserRequest) returns (User);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (User);
+}
+
+service CatalogService {
+  rpc ListProducts(Empty) returns (stream Product);
+  rpc GetProductBySku(GetProductBySkuRequest) returns (Product);
+}
+
+service InventoryService {
+  rpc ReserveInventory(ReserveInventoryRequest) returns (ReserveInventoryResponse);
+  rpc ReleaseInventory(ReserveInventoryRequest) returns (ReserveInventoryResponse);
+  rpc GetInventoryStatus(GetInventoryStatusRequest) returns (InventoryItem);
+}
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (Order);
+  rpc GetOrder(GetOrderRequest) returns (Order);
+}
+
+service PaymentService {
+  rpc Authorize(PaymentAuthorizationRequest) returns (PaymentAuthorizationResponse);
+  rpc Capture(CapturePaymentRequest) returns (PaymentAuthorizationResponse);
+}
+
+service NotificationService {
+  rpc Send(NotificationRequest) returns (NotificationResponse);
+}
+
+service AuditService {
+  rpc Append(AuditEvent) returns (Empty);
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetProductBySkuRequest {
+  string sku = 1;
+}
+
+message GetInventoryStatusRequest {
+  string sku = 1;
+}
+
+message GetOrderRequest {
+  string id = 1;
+}
+
+message CapturePaymentRequest {
+  string payment_id = 1;
+  int64 amount_cents = 2;
+}

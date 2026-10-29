@@ -12,7 +12,10 @@ This repository captures the PRD-driven architecture for the StockFlow inventory
 - Payment service
 - Notification service
 - Audit service
-- Shared contracts and platform packages
+- Shared contracts, platform, and config packages
+- PostgreSQL service databases and migration runner
+- Redis, RabbitMQ, and MinIO infrastructure
+- Protobuf contract generation via Buf
 
 ## Tooling baseline
 
@@ -21,6 +24,8 @@ This repository captures the PRD-driven architecture for the StockFlow inventory
 - pnpm workspaces
 - Turbo monorepo orchestration
 - tsup for package builds
+- Buf + Protobuf for contract generation
+- Docker Compose for local integration services
 
 ## Repository layout
 
@@ -49,7 +54,15 @@ Run:
 
 ```bash
 pnpm install
-pnpm exec turbo run build
+pnpm build
+pnpm test
+pnpm proto:generate
 ```
 
-This verifies the workspace, TS config, and build tooling work before business logic is added.
+If Docker is available locally, you can also start the backing services:
+
+```bash
+docker compose up -d
+```
+
+This verifies the workspace, contract pipeline, and infrastructure scaffolding before business logic is added.
