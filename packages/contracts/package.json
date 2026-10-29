@@ -1,0 +1,12 @@
+{
+  "name": "@stockflow/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --out-dir dist",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "echo 'No lint config yet'",
+    "test": "echo 'No tests yet'"
+  }
+}
